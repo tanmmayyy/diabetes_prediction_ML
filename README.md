@@ -94,6 +94,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 
 ## Contact
-- Issue Tracker: [link to GitHub issues]
+- Issue Tracker: https://github.com/tanmmayyy/diabetes_prediction_ML/issues
 - Source Code: https://github.com/tanmmayyy/diabetes_prediction_ML
 - Email: jaintanmay543@gmail.com
