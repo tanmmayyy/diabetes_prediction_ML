@@ -91,16 +91,7 @@ pytest tests/
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Citation
-If you use this library in your research, please cite:
-```
-@software{mll2024,
-  author = {Your Name},
-  title = {Machine Learning Library (MLL)},
-  year = {2024},
-  url = {https://github.com/username/mll}
-}
-```
+
 
 ## Contact
 - Issue Tracker: [link to GitHub issues]
