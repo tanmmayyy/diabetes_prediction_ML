@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Risk Predictor</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+        .high-risk {
+            background-color: #ffebee;
+            border: 1px solid #ffcdd2;
+        }
+        .low-risk {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+        }
+        .error {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diabetes Risk Predictor</h1>
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="Pregnancies">Number of Pregnancies:</label>
+                <input type="number" id="Pregnancies" name="Pregnancies" required min="0" step="1">
+            </div>
+            <div class="form-group">
+                <label for="Glucose">Glucose Level (mg/dL):</label>
+                <input type="number" id="Glucose" name="Glucose" required min="0">
+            </div>
+            <div class="form-group">
+                <label for="BloodPressure">Blood Pressure (mm Hg):</label>
+                <input type="number" id="BloodPressure" name="BloodPressure" required min="0">
+            </div>
+            <div class="form-group">
+                <label for="SkinThickness">Skin Thickness (mm):</label>
+                <input type="number" id="SkinThickness" name="SkinThickness" required min="0">
+            </div>
+            <div class="form-group">
+                <label for="Insulin">Insulin Level (μU/ml):</label>
+                <input type="number" id="Insulin" name="Insulin" required min="0">
+            </div>
+            <div class="form-group">
+                <label for="BMI">BMI:</label>
+                <input type="number" id="BMI" name="BMI" required min="0" step="0.1">
+            </div>
+            <div class="form-group">
+                <label for="DiabetesPedigreeFunction">Diabetes Pedigree Function:</label>
+                <input type="number" id="DiabetesPedigreeFunction" name="DiabetesPedigreeFunction" required min="0" step="0.001">
+            </div>
+            <div class="form-group">
+                <label for="Age">Age:</label>
+                <input type="number" id="Age" name="Age" required min="0" step="1">
+            </div>
+            <button type="submit">Predict Risk</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#predictionForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset previous results and errors
+                $('#result').hide();
+                $('#error').hide();
+                
+                // Get form data
+                var formData = $(this).serialize();
+                
+                // Make prediction request
+                $.ajax({
+                    url: '/predict',
+                    type: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#error').text(response.error).show();
+                        } else {
+                            var resultDiv = $('#result');
+                            resultDiv.removeClass('high-risk low-risk');
+                            
+                            if (response.prediction === 1) {
+                                resultDiv.addClass('high-risk');
+                                resultDiv.html(`
+                                    <h3>Result: High Risk of Diabetes</h3>
+                                    <p>The model predicts a high risk of diabetes with ${(response.probability * 100).toFixed(1)}% probability.</p>
+                                    <p>Please consult with a healthcare professional for proper medical advice.</p>
+                                `);
+                            } else {
+                                resultDiv.addClass('low-risk');
+                                resultDiv.html(`
+                                    <h3>Result: Low Risk of Diabetes</h3>
+                                    <p>The model predicts a low risk of diabetes with ${((1 - response.probability) * 100).toFixed(1)}% probability.</p>
+                                    <p>Continue maintaining a healthy lifestyle!</p>
+                                `);
+                            }
+                            resultDiv.show();
+                        }
+                    },
+                    error: function() {
+                        $('#error').text('An error occurred while making the prediction. Please try again.').show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
