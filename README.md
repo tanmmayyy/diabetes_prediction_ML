@@ -54,6 +54,23 @@ mll/
     ├── __init__.py
     └── metrics.py
 ```
+## Model Performance
+- Accuracy: 74.68% (Using SVM, which showed the best performance)
+- Precision: 
+  * Class 0 (No Diabetes): 0.80
+  * Class 1 (Diabetes): 0.67
+- Recall: 
+  * Class 0 (No Diabetes): 0.83
+  * Class 1 (Diabetes): 0.62
+- F1 Score:
+  * Class 0 (No Diabetes): 0.81
+  * Class 1 (Diabetes): 0.64
+
+Model Comparison:
+- Support Vector Machine (SVM): 74.68%
+- Random Forest: 73.38%
+- Decision Tree: 71.43%
+- K-Nearest Neighbors (KNN): 72.08%
 
 ## Documentation
 Detailed documentation is available at [docs link]. This includes:
